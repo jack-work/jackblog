@@ -1,0 +1,110 @@
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin-bottom: 120px; /* Increased footer margin to prevent overlap */
+  color: #5c4b37; /* Warmer text color for sepia tone */
+  background-color: #f8f3e9; /* Sepia background color */
+  font-family: 'Source Serif Pro', Georgia, serif;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: 'Playfair Display', serif;
+  color: #3c2e1e; /* Darker sepia for headings */
+}
+
+.container {
+  max-width: 1100px; /* Wider container */
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #a18f78;
+}
+
+.card {
+  border-radius: 0;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  border-color: #e0d5c5; /* Sepia-toned border */
+  background-color: #fffaf0; /* Lighter sepia for card background */
+  margin-bottom: 30px; /* Add more space between cards */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-title {
+  font-weight: 700;
+  color: #3c2e1e; /* Darker sepia for headings */
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.blog-post {
+  background-color: #fffaf0; /* Lighter sepia for post background */
+  padding: 2rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  border: 1px solid #e0d5c5; /* Sepia-toned border */
+}
+
+.display-4, .display-5 {
+  font-weight: 700;
+}
+
+.btn-primary {
+  background-color: #8b6c42; /* Sepia-toned button */
+  border-color: #8b6c42;
+}
+
+.btn-primary:hover {
+  background-color: #6d532f; /* Darker sepia on hover */
+  border-color: #6d532f;
+}
+
+.navbar {
+  padding: 1rem 0;
+  background-color: #f5efe3 !important; /* Sepia navbar */
+  border-bottom: 1px solid #e0d5c5 !important; /* Sepia border */
+}
+
+.blog-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.footer {
+  background-color: #f5efe3 !important; /* Sepia footer */
+  border-top: 1px solid #e0d5c5 !important; /* Sepia border */
+  padding: 1.5rem 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: auto; /* Allow footer to grow as needed */
+}
+
+/* Add extra padding to the bottom of the main content */
+main.pb-3 {
+  padding-bottom: 6rem !important;
+}
+
+/* Adjust links to match sepia theme */
+a {
+  color: #8b6c42;
+}
+
+a:hover {
+  color: #6d532f;
+}
