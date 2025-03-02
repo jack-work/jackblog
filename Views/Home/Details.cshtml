@@ -54,9 +54,9 @@
                                                     </a>
                                                 </td>
                                                 <td><code>@solution.Description</code></td>
-                                                <td><code>@solution.Input</code></td>
-                                                <td><code>@solution.Expected</code></td>
-                                                <td><code>@solution.Actual</code></td>
+                                                <td><pre class="code-pre"><code>@solution.Input</code></pre></td>
+                                                <td><pre class="code-pre"><code>@solution.Expected</code></pre></td>
+                                                <td><pre class="code-pre"><code>@solution.Actual</code></pre></td>
                                             </tr>
                                             index++;
                                         }
@@ -73,7 +73,14 @@
                     </div>
                 }
                 
-                <a asp-action="Index" class="btn btn-secondary mt-5">&larr; Back to Blog</a>
+                @if (!string.IsNullOrEmpty(puzzleId))
+                {
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary mt-5">&larr; Remove Filter</a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-secondary mt-5">&larr; Back to Blog</a>
+                }
             </article>
         </div>
     </div>

@@ -1,5 +1,6 @@
 using JackBlog.Models;
 using JackBlog.Services;
+using Moq;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 
@@ -17,23 +18,33 @@ builder.Logging.AddOpenTelemetry(options =>
 });
 
 // Configure logging level
-builder.Logging.AddFilter("Microsoft", LogLevel.Warning)
-               .AddFilter("System", LogLevel.Warning)
-               .AddFilter("JackBlog", LogLevel.Debug);
+builder.Logging.SetMinimumLevel(LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft", LogLevel.Debug);
+builder.Logging.AddFilter("System", LogLevel.Warning);
+builder.Logging.AddFilter("JackBlog", LogLevel.Debug);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<JackBlog.Models.BlogService>();
+builder.Services.AddSingleton<ILogger<CodePuzzleService>>(new ConsoleLogger<CodePuzzleService>());
+builder.Services
+  .AddSingleton<ILogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>>(
+      new ConsoleLogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>());
+builder.Services.AddSingleton<ILogger<CodePuzzleService>>(new ConsoleLogger<CodePuzzleService>());
+builder.Services.AddSingleton<ILogger<BlogService>>(new ConsoleLogger<BlogService>());
 builder.Services.AddKeyedSingleton<
     ITestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>
 >(
     "SordidArrays",
-    (serviceProvider, key) => new TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>(
-        key?.ToString()!, 
-        serviceProvider.GetRequiredService<ILogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>>()
-    )
+    (serviceProvider, key) =>
+        new TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>(
+            key?.ToString()!,
+            serviceProvider.GetRequiredService<
+                ILogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>
+            >()
+        )
 );
-builder.Services.AddSingleton<SordidArraysService>();
+builder.Services.AddSingleton<CodePuzzleService>();
 
 var app = builder.Build();
 
@@ -55,3 +66,21 @@ app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+class ConsoleLogger<T> : ILogger<T>
+{
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    {
+        return null;
+    }
+
+    public bool IsEnabled(LogLevel logLevel)
+    {
+        return true;
+    }
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        Console.WriteLine(state);
+    }
+}

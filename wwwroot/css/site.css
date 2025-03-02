@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  margin-bottom: 120px; /* Increased footer margin to prevent overlap */
+  margin-bottom: 60px; /* Reduced footer margin for smaller footer */
   color: #5c4b37; /* Warmer text color for sepia tone */
   background-color: #f8f3e9; /* Sepia background color */
   font-family: 'Source Serif Pro', Georgia, serif;
@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 .footer {
   background-color: #f5efe3 !important; /* Sepia footer */
   border-top: 1px solid #e0d5c5 !important; /* Sepia border */
-  padding: 1.5rem 0;
+  padding: 0.8rem 0;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -97,7 +97,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 
 /* Add extra padding to the bottom of the main content */
 main.pb-3 {
-  padding-bottom: 6rem !important;
+  padding-bottom: 4rem !important;
 }
 
 /* Adjust links to match sepia theme */
@@ -107,4 +107,43 @@ a {
 
 a:hover {
   color: #6d532f;
+}
+
+/* Puzzle solution table styles */
+.puzzle-solutions table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.puzzle-solutions td, 
+.puzzle-solutions th {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 0;
+  vertical-align: top;
+}
+
+.puzzle-solutions .code-pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+  overflow: visible;
+  font-size: 0.85rem;
+  background: none;
+  padding: 0;
+}
+
+.puzzle-solutions code {
+  white-space: inherit;
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* Maintain the success/danger background colors */
+.table-success .code-pre,
+.table-danger .code-pre {
+  background: none;
 }

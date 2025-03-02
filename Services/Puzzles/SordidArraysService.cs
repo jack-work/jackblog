@@ -1,17 +1,18 @@
 using JackBlog.Models;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace JackBlog.Services;
 
-public class SordidArraysService : ICodePuzzleService<SordidArraysTestCase, SordidArraysInput, double>
+public class CodePuzzleService : ICodePuzzleService<SordidArraysTestCase, SordidArraysInput, double>
 {
     private readonly ITestCaseProvider<SordidArraysTestCase, SordidArraysInput, double> _testCaseProvider;
-    private readonly ILogger<SordidArraysService> _logger;
+    private readonly ILogger<CodePuzzleService> _logger;
 
-    public SordidArraysService(
+    public CodePuzzleService(
         [FromKeyedServices("SordidArrays")] ITestCaseProvider<SordidArraysTestCase, SordidArraysInput, double> testCaseProvider,
-        ILogger<SordidArraysService> logger)
+        ILogger<CodePuzzleService> logger)
     {
         _testCaseProvider = testCaseProvider;
         _logger = logger;
@@ -20,21 +21,23 @@ public class SordidArraysService : ICodePuzzleService<SordidArraysTestCase, Sord
 
     public IEnumerable<IResolvedTestCase<SordidArraysInput, double>> Solve(int? specificIndex = null)
     {
+        _logger.LogInformation("{0}", 0 / 2.0);
+        _logger.LogInformation("----running test for {specificIndex}----", specificIndex);
         _logger.LogInformation("Solving SordidArrays puzzle with specificIndex: {SpecificIndex}", specificIndex);
         var stopwatch = Stopwatch.StartNew();
-        
+
         var testCases = _testCaseProvider.GetTestCases().ToList();
         _logger.LogDebug("Loaded {TestCaseCount} test cases", testCases.Count);
-        
+
         IEnumerable<IResolvedTestCase<SordidArraysInput, double>> results;
-        
+
         if (specificIndex.HasValue && specificIndex.Value >= 0 && specificIndex.Value < testCases.Count)
         {
             _logger.LogDebug("Solving specific test case at index {Index}", specificIndex.Value);
             // Only solve the specific test case at the given index
             var testCase = testCases[specificIndex.Value];
-            results = new List<IResolvedTestCase<SordidArraysInput, double>> 
-            { 
+            results = new List<IResolvedTestCase<SordidArraysInput, double>>
+            {
                 new ResolvedSordidArraysTestCase
                 {
                     Id = specificIndex.Value.ToString(),
@@ -60,10 +63,11 @@ public class SordidArraysService : ICodePuzzleService<SordidArraysTestCase, Sord
                 })
                 .ToList();
         }
-        
+
         stopwatch.Stop();
         _logger.LogInformation("Solved {ResultCount} test cases in {ElapsedMs}ms", results.Count(), stopwatch.ElapsedMilliseconds);
-        
+        _logger.LogInformation("---------------------------------------------------------------");
+
         return results;
     }
 
@@ -72,59 +76,99 @@ public class SordidArraysService : ICodePuzzleService<SordidArraysTestCase, Sord
         var sw = Stopwatch.StartNew();
         var result = Solve(test.Input.Left.ToArray(), test.Input.Right.ToArray());
         sw.Stop();
-        
+
         _logger.LogDebug("Solved test case in {ElapsedMs}ms", sw.ElapsedMilliseconds);
-        
+
         return result;
     }
 
-    private double Solve(int[] nums1, int[] nums2)
+    private int _lim = 1000;
+    private double Solve(int[] left, int[] right)
     {
-        _logger.LogDebug("Solving SordidArrays with arrays of length {Length1} and {Length2}", nums1.Length, nums2.Length);
-        
-        if (nums1.Length > nums2.Length) 
+        // Special case where C# math causes result to evaluate to 0.
+        if (left.Length == 0 && right.Length == 0) return 0;
+        var lenL = left.Length;
+        var lenR = right.Length;
+        if (lenL < lenR) return Solve(right, left);
+
+        var lenTotal = lenL + lenR;
+        var half = lenTotal / 2;
+
+        var sepL = lenL / 2;
+        var sepR = half - sepL;
+        for (var i = 0; i < _lim; i++)
         {
-            _logger.LogDebug("Swapping arrays to ensure nums1 is smaller");
-            return Solve(nums2, nums1); // Ensure nums1 is smaller
-        }
-        
-        int m = nums1.Length, n = nums2.Length;
-        int left = 0, right = m, halfLen = (m + n + 1) / 2;
-        
-        _logger.LogTrace("Binary search starting with left={Left}, right={Right}, halfLen={HalfLen}", left, right, halfLen);
-        
-        int iterations = 0;
-        while (left <= right) {
-            iterations++;
-            int i = (left + right) / 2;
-            int j = halfLen - i;
-
-            int nums1Left = (i == 0) ? int.MinValue : nums1[i - 1];
-            int nums1Right = (i == m) ? int.MaxValue : nums1[i];
-            int nums2Left = (j == 0) ? int.MinValue : nums2[j - 1];
-            int nums2Right = (j == n) ? int.MaxValue : nums2[j];
-
-            _logger.LogTrace("Iteration {Iteration}: i={I}, j={J}", iterations, i, j);
-            
-            if (nums1Left <= nums2Right && nums2Left <= nums1Right) {
-                double result;
-                if ((m + n) % 2 == 0)
-                    result = (Math.Max(nums1Left, nums2Left) + Math.Min(nums1Right, nums2Right)) / 2.0;
-                else
-                    result = Math.Max(nums1Left, nums2Left);
-                
-                _logger.LogDebug("Found solution in {Iterations} iterations: {Result}", iterations, result);
-                return result;
-            } else if (nums1Left > nums2Right) {
-                _logger.LogTrace("Adjusting right bound from {Right} to {NewRight}", right, i - 1);
-                right = i - 1;
-            } else {
-                _logger.LogTrace("Adjusting left bound from {Left} to {NewLeft}", left, i + 1);
-                left = i + 1;
+            var leftL = Get(left, sepL - 1);
+            var leftR = Get(left, sepL);
+            var rightL = Get(right, sepR - 1);
+            var rightR = Get(right, sepR);
+            ps(left, sepL, right, sepR);
+            if (rightL > leftR)
+            {
+                sepL++;
+                sepR--;
+                continue;
             }
+            if (leftL > rightR)
+            {
+                sepL--;
+                sepR++;
+                continue;
+            }
+
+            var minR = Math.Min(leftR, rightR);
+            var maxL = Math.Max(leftL, rightL);
+            return lenTotal % 2 != 0 ? minR : (minR + maxL) / 2.0;
         }
-        
-        _logger.LogError("Failed to find median - input arrays may not be sorted");
-        throw new ArgumentException("Input arrays are not sorted.");
+
+        return 0;
     }
+
+    private int Get(int[] arr, int index) =>
+        index < 0 ? Int32.MinValue :
+        index >= arr.Length ? Int32.MaxValue :
+        arr[index];
+
+    private void ps2<T>(T sepL, T sepR,
+        [CallerArgumentExpression(nameof(sepL))] string? sepLName = null,
+        [CallerArgumentExpression(nameof(sepR))] string? sepRName = null
+    )
+    {
+        _logger.l(JsonSerializer.Serialize(new Dictionary<string, T>
+        {
+        { sepLName ?? "var1", sepL },
+        { sepRName ?? "var2" , sepR },
+        }, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
+    private void ps(int[] left, int sepL, int[] right, int sepR)
+    {
+        try
+        {
+            _logger.l(JsonSerializer.Serialize(new
+            {
+                left = string.Join(',', left[..sepL]) + '|' + string.Join(',', left[sepL..]),
+                right = string.Join(',', right[..sepR]) + '|' + string.Join(',', right[sepR..]),
+                // left = string.Join(',', left) + '|' + string.Join(',', left),
+                // right = string.Join(',', right) + '|' + string.Join(',', right),
+            }, new JsonSerializerOptions { WriteIndented = true }));
+        }
+        catch (Exception e)
+        {
+            _logger.l(e.ToString());
+            _logger.l(JsonSerializer.Serialize(new
+            {
+                sepL,
+                sepR,
+                left = string.Join(',', left) + '|' + string.Join(',', left),
+                right = string.Join(',', right) + '|' + string.Join(',', right),
+            }, new JsonSerializerOptions { WriteIndented = true }));
+        }
+    }
+
+}
+
+public static class Extensions
+{
+    public static void l<T>(this ILogger<T> logger, string content) => logger.LogInformation(content);
 }

@@ -1,6 +1,5 @@
 using System.Text.Json;
 using JackBlog.Models;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace JackBlog.Services;

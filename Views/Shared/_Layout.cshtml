@@ -36,10 +36,9 @@
     
     @RenderBody()
 
-    <footer class="footer text-muted py-4 mt-5">
+    <footer class="footer text-muted py-2 mt-5">
         <div class="container text-center">
-            <p>&copy; @DateTime.Now.Year - Jack's Blog - Built with ASP.NET Core</p>
-            <p><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a></p>
+            <small>&copy; @DateTime.Now.Year - Jack's Blog | <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></small>
         </div>
     </footer>
     
