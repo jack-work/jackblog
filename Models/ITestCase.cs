@@ -1,5 +1,5 @@
 namespace JackBlog.Models;
-internal interface ITestCase<TInput, TExcepted>
+public interface ITestCase<TInput, TExcepted>
 {
     public string Description { get; init; }
     public TInput Input { get; init; }

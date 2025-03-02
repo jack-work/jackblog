@@ -21,13 +21,22 @@ public class HomeController : Controller
         return View(posts);
     }
 
-    public IActionResult Details(int id)
+    public IActionResult Details(string id, string? puzzleId)
     {
-        var post = _blogService.GetPostById(id);
+        int? puzzleIndex = null;
+        
+        if (!string.IsNullOrEmpty(puzzleId) && int.TryParse(puzzleId, out int index))
+        {
+            puzzleIndex = index;
+            ViewBag.PuzzleId = puzzleId;
+        }
+        
+        var post = _blogService.GetPostById(id, puzzleIndex);
         if (post == null)
         {
             return NotFound();
         }
+        
         return View(post);
     }
 

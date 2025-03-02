@@ -21,7 +21,13 @@
                             Posted on @post.PublishedDate.ToString("MMMM dd, yyyy") by @post.Author
                         </p>
                         <p class="card-text">@post.Content</p>
-                        <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">Read More &rarr;</a>
+                        
+                        @if (post.PuzzleSolutions != null && post.PuzzleSolutions.Any())
+                        {
+                            <p>This post contains @post.PuzzleSolutions.Count() puzzle solution(s).</p>
+                        }
+                        
+                        <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">View Details &rarr;</a>
                     </div>
                 </article>
             }

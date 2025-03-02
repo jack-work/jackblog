@@ -1,262 +1,299 @@
 [
   {
     "description": "Both arrays empty",
-    "input": [
-      {
-        "left": [],
-        "right": []
-      }
-    ],
-    "expected": null
+    "input": {
+      "left": [],
+      "right": []
+    },
+    "expected": 0
   },
   {
     "description": "First array empty",
-    "nums1": [],
-    "nums2": [
-      1
-    ],
+    "input": {
+      "left": [],
+      "right": [
+        1
+      ]
+    },
     "expected": 1
   },
   {
     "description": "Second array empty",
-    "nums1": [
-      2
-    ],
-    "nums2": [],
+    "input": {
+      "left": [
+        2
+      ],
+      "right": []
+    },
     "expected": 2
   },
   {
     "description": "Equal length arrays with even total length",
-    "nums1": [
-      1,
-      3
-    ],
-    "nums2": [
-      2,
-      4
-    ],
+    "input": {
+      "left": [
+        1,
+        3
+      ],
+      "right": [
+        2,
+        4
+      ]
+    },
     "expected": 2.5
   },
   {
     "description": "Equal length arrays with odd total length",
-    "nums1": [
-      1,
-      3
-    ],
-    "nums2": [
-      2
-    ],
+    "input": {
+      "left": [
+        1,
+        3
+      ],
+      "right": [
+        2
+      ]
+    },
     "expected": 2
   },
   {
     "description": "First array longer than second",
-    "nums1": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "nums2": [
-      6,
-      7
-    ],
+    "input": {
+      "left": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "right": [
+        6,
+        7
+      ]
+    },
     "expected": 4
   },
   {
     "description": "Second array longer than first",
-    "nums1": [
-      1,
-      2
-    ],
-    "nums2": [
-      3,
-      4,
-      5,
-      6,
-      7
-    ],
+    "input": {
+      "left": [
+        1,
+        2
+      ],
+      "right": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
     "expected": 4
   },
   {
     "description": "Arrays with same values",
-    "nums1": [
-      1,
-      1,
-      1
-    ],
-    "nums2": [
-      1,
-      1,
-      1
-    ],
+    "input": {
+      "left": [
+        1,
+        1,
+        1
+      ],
+      "right": [
+        1,
+        1,
+        1
+      ]
+    },
     "expected": 1
   },
   {
     "description": "Arrays with negative numbers",
-    "nums1": [
-      -5,
-      -3,
-      -1
-    ],
-    "nums2": [
-      -2,
-      0,
-      2
-    ],
+    "input": {
+      "left": [
+        -5,
+        -3,
+        -1
+      ],
+      "right": [
+        -2,
+        0,
+        2
+      ]
+    },
     "expected": -1.5
   },
   {
     "description": "Arrays with large numbers",
-    "nums1": [
-      100000,
-      200000
-    ],
-    "nums2": [
-      300000,
-      400000
-    ],
+    "input": {
+      "left": [
+        100000,
+        200000
+      ],
+      "right": [
+        300000,
+        400000
+      ]
+    },
     "expected": 250000
   },
   {
-    "description": "Arrays with decimal numbers",
-    "nums1": [
-      1.5,
-      2.5
-    ],
-    "nums2": [
-      3.5,
-      4.5
-    ],
-    "expected": 3
+    "description": "Arrays with formerly decimal numbers",
+    "input": {
+      "left": [
+        1,
+        2
+      ],
+      "right": [
+        3,
+        4
+      ]
+    },
+    "expected": 2.5
   },
   {
     "description": "One array with single element, other empty",
-    "nums1": [
-      5
-    ],
-    "nums2": [],
+    "input": {
+      "left": [
+        5
+      ],
+      "right": []
+    },
     "expected": 5
   },
   {
     "description": "Non-overlapping arrays",
-    "nums1": [
-      1,
-      2,
-      3
-    ],
-    "nums2": [
-      4,
-      5,
-      6
-    ],
+    "input": {
+      "left": [
+        1,
+        2,
+        3
+      ],
+      "right": [
+        4,
+        5,
+        6
+      ]
+    },
     "expected": 3.5
   },
   {
     "description": "Overlapping arrays",
-    "nums1": [
-      1,
-      3,
-      5
-    ],
-    "nums2": [
-      2,
-      4,
-      6
-    ],
+    "input": {
+      "left": [
+        1,
+        3,
+        5
+      ],
+      "right": [
+        2,
+        4,
+        6
+      ]
+    },
     "expected": 3.5
   },
   {
     "description": "Completely overlapping arrays",
-    "nums1": [
-      1,
-      2,
-      3
-    ],
-    "nums2": [
-      1,
-      2,
-      3
-    ],
+    "input": {
+      "left": [
+        1,
+        2,
+        3
+      ],
+      "right": [
+        1,
+        2,
+        3
+      ]
+    },
     "expected": 2
   },
   {
     "description": "Edge case - single elements with odd sum",
-    "nums1": [
-      1
-    ],
-    "nums2": [
-      2
-    ],
+    "input": {
+      "left": [
+        1
+      ],
+      "right": [
+        2
+      ]
+    },
     "expected": 1.5
   },
   {
     "description": "Edge case - single elements with even sum",
-    "nums1": [
-      1
-    ],
-    "nums2": [
-      1
-    ],
+    "input": {
+      "left": [
+        1
+      ],
+      "right": [
+        1
+      ]
+    },
     "expected": 1
   },
   {
     "description": "Complex case with mixed positive/negative",
-    "nums1": [
-      -10,
-      -5,
-      0,
-      5,
-      10
-    ],
-    "nums2": [
-      -7,
-      -2,
-      3,
-      8
-    ],
-    "expected": 0.5
+    "input": {
+      "left": [
+        -10,
+        -5,
+        0,
+        5,
+        10
+      ],
+      "right": [
+        -7,
+        -2,
+        3,
+        8
+      ]
+    },
+    "expected": 0
   },
   {
     "description": "Large arrays",
-    "nums1": [
-      1,
-      3,
-      5,
-      7,
-      9,
-      11,
-      13,
-      15,
-      17,
-      19
-    ],
-    "nums2": [
-      2,
-      4,
-      6,
-      8,
-      10,
-      12,
-      14,
-      16,
-      18,
-      20
-    ],
+    "input": {
+      "left": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17,
+        19
+      ],
+      "right": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ]
+    },
     "expected": 10.5
   },
   {
     "description": "Arrays with zeros",
-    "nums1": [
-      0,
-      0,
-      0
-    ],
-    "nums2": [
-      0,
-      0,
-      0
-    ],
+    "input": {
+      "left": [
+        0,
+        0,
+        0
+      ],
+      "right": [
+        0,
+        0,
+        0
+      ]
+    },
     "expected": 0
   }
 ]
+

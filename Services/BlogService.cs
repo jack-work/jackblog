@@ -1,54 +1,83 @@
+using System.Text.Json;
+using System.Diagnostics;
 using JackBlog.Services;
+using Microsoft.Extensions.Logging;
 
 namespace JackBlog.Models;
 
 public class BlogService
 {
     private readonly List<BlogPost> _blogPosts;
+    private readonly SordidArraysService _sordidArraysService;
+    private readonly ILogger<BlogService> _logger;
 
-    // public BlogService(SordidArraysService sordidArraysService)
-    public BlogService()
+    public BlogService(SordidArraysService sordidArraysService, ILogger<BlogService> logger)
     {
-        // Initialize with some static blog entries
-        _blogPosts = new List<BlogPost>
-        {
+        _sordidArraysService = sordidArraysService;
+        _logger = logger;
+        
+        _logger.LogInformation("BlogService initializing");
+        
+        _blogPosts = [
             new BlogPost
             {
-                Id = 1,
-                Title = "Getting Started with ASP.NET Core",
-                Content =
-                    "ASP.NET Core is a cross-platform, high-performance, open-source framework for building modern, cloud-based, Internet-connected applications.",
-                PublishedDate = new DateTime(2023, 1, 15),
+                Id = "SordidArrays",
+                Title = "SordidArrays",
+                Content = "A solution to finding the median of two sorted arrays.",
+                PublishedDate = DateTime.Now,
                 Author = "Jack",
-            },
-            new BlogPost
-            {
-                Id = 2,
-                Title = "Working with Entity Framework Core",
-                Content =
-                    "Entity Framework Core is a modern object-database mapper for .NET. It supports LINQ queries, change tracking, updates, and schema migrations.",
-                PublishedDate = new DateTime(2023, 2, 10),
-                Author = "Jack",
-            },
-            new BlogPost
-            {
-                Id = 3,
-                Title = "Building RESTful APIs with ASP.NET Core",
-                Content =
-                    "Learn how to build RESTful APIs using ASP.NET Core and how to consume them using JavaScript or other client technologies.",
-                PublishedDate = new DateTime(2023, 3, 5),
-                Author = "Jack",
-            },
-        };
+                PuzzleSolutions = null // We'll load these on demand
+            }
+        ];
+        
+        _logger.LogInformation("BlogService initialized with {0} posts", _blogPosts.Count);
     }
+
+    private PuzzleSolution CreatePuzzlePost<TInput, TResult>(
+        IResolvedTestCase<TInput, TResult> results
+    ) =>
+        new PuzzleSolution
+        {
+            Description = results.Description,
+            Input = JsonSerializer.Serialize(results.Input),
+            Expected = results?.Expected?.ToString() ?? "",
+            Actual = results?.Actual?.ToString() ?? "",
+        };
 
     public IEnumerable<BlogPost> GetAllPosts()
     {
+        _logger.LogInformation("Getting all blog posts");
         return _blogPosts.OrderByDescending(p => p.PublishedDate);
     }
 
-    public BlogPost? GetPostById(int id)
+    public BlogPost? GetPostById(string id, int? puzzleId = null)
     {
-        return _blogPosts.FirstOrDefault(p => p.Id == id);
+        _logger.LogInformation("Getting blog post by ID: {0}, PuzzleId: {1}", id, puzzleId);
+        
+        var stopwatch = Stopwatch.StartNew();
+        var post = _blogPosts.FirstOrDefault(p => p.Id == id);
+        
+        if (post == null)
+        {
+            _logger.LogWarning("Blog post with ID {0} not found", id);
+            return null;
+        }
+        
+        if (post.Id == "SordidArrays")
+        {
+            _logger.LogDebug("Loading puzzle solutions for SordidArrays post");
+            // Lazily load puzzle solutions with optional filtering
+            post.PuzzleSolutions = _sordidArraysService
+                .Solve(puzzleId)
+                .Select(CreatePuzzlePost)
+                .ToList();
+            
+            _logger.LogInformation("Loaded {0} puzzle solutions", post.PuzzleSolutions.Count());
+        }
+        
+        stopwatch.Stop();
+        _logger.LogInformation("Retrieved blog post {0} in {1}ms", id, stopwatch.ElapsedMilliseconds);
+        
+        return post;
     }
 }

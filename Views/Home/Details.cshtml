@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    string? puzzleId = ViewBag.PuzzleId as string;
 }
 
 <div class="container">
@@ -12,10 +13,66 @@
                 <p class="text-muted">
                     Posted on @Model.PublishedDate.ToString("MMMM dd, yyyy") by @Model.Author
                 </p>
+                
+                @if (!string.IsNullOrEmpty(puzzleId))
+                {
+                    <div class="alert alert-info">
+                        Viewing puzzle ID: @puzzleId
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary ml-2">View All</a>
+                    </div>
+                }
+                
                 <hr />
                 <div class="blog-content">
                     @Model.Content
                 </div>
+
+                @if (Model.PuzzleSolutions != null && Model.PuzzleSolutions.Any())
+                {
+                    <div class="puzzle-solutions mt-4">
+                        <h3>Puzzle Solutions</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Description</th>
+                                        <th>Input</th>
+                                        <th>Expected</th>
+                                        <th>Actual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int index = 0;
+                                        foreach (var solution in Model.PuzzleSolutions)
+                                        {
+                                            <tr class="@(solution.Expected == solution.Actual ? "table-success" : "table-danger")">
+                                                <td>
+                                                    <a asp-action="Details" asp-route-id="@Model.Id" asp-route-puzzleId="@index">
+                                                        @index
+                                                    </a>
+                                                </td>
+                                                <td><code>@solution.Description</code></td>
+                                                <td><code>@solution.Input</code></td>
+                                                <td><code>@solution.Expected</code></td>
+                                                <td><code>@solution.Actual</code></td>
+                                            </tr>
+                                            index++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mt-4">
+                        No puzzle results found.
+                    </div>
+                }
+                
                 <a asp-action="Index" class="btn btn-secondary mt-5">&larr; Back to Blog</a>
             </article>
         </div>
