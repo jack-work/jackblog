@@ -27,7 +27,7 @@ public class PuzzleAggregator
         {
             Id = service.PuzzleName,
             Title = service.PuzzleName,
-            Content = service.PuzzleName,
+            Content = service.PuzzleDescription,
             PublishedDate = DateTime.Now,
             Author = "Jack",
         }).ToList();

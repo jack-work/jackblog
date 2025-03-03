@@ -10,6 +10,7 @@ public class TestCaseProvider : ITestCaseProvider
       PropertyNameCaseInsensitive = true
     };
     private readonly ILogger<TestCaseProvider> _logger;
+    private readonly Dictionary<string, string> _descriptionCache = new();
 
     public TestCaseProvider(ILogger<TestCaseProvider> logger)
     {
@@ -56,6 +57,47 @@ public class TestCaseProvider : ITestCaseProvider
         {
             _logger.LogError(ex, "Failed to deserialize test cases from {FilePath}", testCaseFilePath);
             throw;
+        }
+    }
+    
+    public string GetPuzzleDescription(string testName)
+    {
+        if (_descriptionCache.TryGetValue(testName, out string? cachedDescription))
+        {
+            return cachedDescription;
+        }
+        
+        string descriptionFilePath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "TestCases",
+            $"{testName}.description.md"
+        );
+        _logger.LogInformation(descriptionFilePath);
+        
+        _logger.LogDebug("Description file path: {FilePath}", descriptionFilePath);
+        
+        if (!File.Exists(descriptionFilePath))
+        {
+            _logger.LogWarning("Description file not found: {FilePath}", descriptionFilePath);
+            // Return a default description if file is not found
+            string defaultDescription = $"Solutions for the {testName} puzzle.";
+            _descriptionCache[testName] = defaultDescription;
+            return defaultDescription;
+        }
+        
+        try
+        {
+            string description = File.ReadAllText(descriptionFilePath);
+            _logger.LogInformation("Loaded description for {TestName}, length: {Length}", testName, description.Length);
+            _descriptionCache[testName] = description;
+            return description;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to read description from {FilePath}", descriptionFilePath);
+            string fallbackDescription = $"Solutions for the {testName} puzzle.";
+            _descriptionCache[testName] = fallbackDescription;
+            return fallbackDescription;
         }
     }
 }

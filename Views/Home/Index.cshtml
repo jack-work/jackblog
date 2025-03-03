@@ -10,7 +10,17 @@
         <!-- <p class="lead">"I would rather write 10,000 notes than a single letter of the alphabet."</p> -->
         <!-- <p class="small fst-italic">— Ludwig Von Beethoven</p> -->
         <h1 class="display-4">Coding Puzzles</h1>
-        <p class="lead">Below are descriptions and answers to various programming puzzles.  The answers are drawn from my own solutions.</p>
+        
+        <div class="featured-image-container my-4">
+            <div class="simple-frame">
+                <img src="/images/The-Chess-Game-by-Sofonisba-Anguissola.jpg" alt="The Chess Game by Sofonisba Anguissola" class="featured-image img-fluid">
+            </div>
+            <div class="image-caption">
+                <small class="text-muted fst-italic">The Chess Game by Sofonisba Anguissola (1555)</small>
+            </div>
+        </div>
+        
+        <p class="lead mx-auto" style="max-width: 80%;">Below are descriptions and answers to various programming puzzles. The answers are drawn from my own solutions.</p>
     </header>
 
     <div class="row">
@@ -23,14 +33,21 @@
                         <p class="card-text small text-muted">
                             Posted on @post.PublishedDate.ToString("MMMM dd, yyyy") by @post.Author
                         </p>
-                        <p class="card-text">@post.Content</p>
+                        <div class="card-text puzzle-description truncated-content">
+                            @{
+                                const int maxLength = 200;
+                                var content = post.Content;
+                                var truncated = content.Length > maxLength ? content.Substring(0, maxLength) + "..." : content;
+                            }
+                            @Markdown.RenderMarkdown(truncated)
+                        </div>
                         
                         @if (post.PuzzleSolutions != null && post.PuzzleSolutions.Any())
                         {
                             <p>This post contains @post.PuzzleSolutions.Count() puzzle solution(s).</p>
                         }
                         
-                        <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">View Details &rarr;</a>
+                        <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">Read Full Description &rarr;</a>
                     </div>
                 </article>
             }

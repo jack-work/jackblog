@@ -1,5 +1,6 @@
 using JackBlog.Models;
 using JackBlog.Services;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
@@ -32,6 +33,9 @@ builder.Services.Configure<PuzzleSettings>(
 builder.Services.Configure<SiteSettings>(
     builder.Configuration.GetSection(SiteSettings.SectionName));
     
+// Register markdown service
+builder.Services.AddSingleton<MarkdownService>();
+    
 builder.Services.AddSingleton<JackBlog.Models.PuzzleAggregator>(services => {
     var puzzleServices = services.GetServices<ICodePuzzleService>();
     var logger = services.GetRequiredService<ILogger<PuzzleAggregator>>();
@@ -58,6 +62,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Configure additional static file serving for the Images folder
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Images")),
+    RequestPath = "/images"
+});
 
 app.UseRouting();
 

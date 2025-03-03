@@ -25,10 +25,12 @@ public class CodePuzzleService<TTestCase, TInput, TResult> : ICodePuzzleService 
         _solver = solver;
         _logger = logger;
         _puzzleSettings = puzzleSettings.Value;
+        PuzzleDescription = _testCaseProvider.GetPuzzleDescription(puzzleName);
         _logger.LogInformation($"{PuzzleName} initialized (RegenerateTestCaseSolutions: {_puzzleSettings.RegenerateTestCaseSolutions})");
     }
 
     public string PuzzleName { get; }
+    public string PuzzleDescription { get; }
     public IEnumerable<PuzzleSolution> Solve(int? specificIndex)
     {
         return SolvePuzzle(specificIndex).Select(CreatePuzzlePost);

@@ -1,5 +1,8 @@
 ﻿@using JackBlog
 @using JackBlog.Models
+@using JackBlog.Services
 @using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Html
 @inject IOptions<SiteSettings> SiteSettings
+@inject MarkdownService Markdown
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

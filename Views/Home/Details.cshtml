@@ -23,8 +23,8 @@
                 }
                 
                 <hr />
-                <div class="blog-content">
-                    @Model.Content
+                <div class="blog-content puzzle-description">
+                    @Markdown.RenderMarkdown(Model.Content)
                 </div>
 
                 @if (Model.PuzzleSolutions != null && Model.PuzzleSolutions.Any())

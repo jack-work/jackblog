@@ -53,6 +53,137 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
   padding: 2rem;
 }
 
+.card-text {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.white-space-pre-line {
+  white-space: pre-line;
+}
+
+.puzzle-description {
+  text-align: justify;
+  line-height: 1.6;
+}
+
+/* Markdown styling */
+.puzzle-description h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #3c2e1e;
+}
+
+.puzzle-description h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.puzzle-description p {
+  margin-bottom: 1rem;
+}
+
+.puzzle-description ul, .puzzle-description ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.puzzle-description li {
+  margin-bottom: 0.5rem;
+}
+
+.puzzle-description code {
+  background-color: rgba(0,0,0,0.05);
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  color: #8b6c42;
+  font-size: 0.9em;
+}
+
+.puzzle-description a {
+  color: #8b6c42;
+  text-decoration: underline;
+}
+
+.puzzle-description a:hover {
+  color: #6d532f;
+}
+
+.truncated-content {
+  position: relative;
+  overflow: hidden;
+  max-height: 150px;
+}
+
+.truncated-content::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255, 250, 240, 0), rgba(255, 250, 240, 1));
+}
+
+/* Featured image styling with simple gold frame */
+.featured-image-container {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.simple-frame {
+  padding: 0;
+  position: relative;
+}
+
+.featured-image {
+  position: relative;
+  transition: all 0.4s ease;
+  max-height: 500px;
+  object-fit: contain;
+  filter: sepia(10%);
+  border: 18px solid;
+  border-image: 
+    linear-gradient(
+      45deg, 
+      #8b6c42 0%, 
+      #d4b483 25%, 
+      #c6a66f 50%, 
+      #d4b483 75%, 
+      #8b6c42 100%
+    ) 1;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.featured-image:hover {
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  transform: scale(1.01);
+  filter: sepia(0%);
+}
+
+.image-caption {
+  margin-top: 1.5rem;
+  color: #8b6c42;
+  font-family: 'Playfair Display', serif;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+  position: relative;
+  padding-top: 15px;
+}
+
+.image-caption::before {
+  content: '✦ ❧ ✦';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  color: #8b6c42;
+  letter-spacing: 10px;
+}
+
 .blog-post {
   background-color: #fffaf0; /* Lighter sepia for post background */
   padding: 2rem;
