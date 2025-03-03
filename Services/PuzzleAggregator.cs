@@ -20,16 +20,14 @@ public class PuzzleAggregator
 
         _logger.LogInformation("BlogService initializing");
 
-        _blogPosts = puzzleServices.Select(service => new PuzzlePost(() =>
-            service?.PuzzleName is {} puzzleName ?
-                TrySolvePuzzleByName(puzzleName) :
-                throw new ArgumentException())
+        _blogPosts = puzzleServices.Select(service => new PuzzlePost()
         {
             Id = service.PuzzleName,
             Title = service.PuzzleName,
             Content = service.PuzzleDescription,
             PublishedDate = DateTime.Now,
             Author = "Jack",
+            PuzzleSolutions = TrySolvePuzzleByName(service.PuzzleName)
         }).ToList();
 
         _logger.LogInformation("BlogService initialized with {0} posts", _blogPosts.Count);
@@ -53,10 +51,15 @@ public class PuzzleAggregator
             _logger.LogWarning("Blog post with ID {0} not found", id);
             return null;
         }
+        _logger.LogInformation("::::::" + post.PuzzleSolutions?.Count().ToString());
 
         stopwatch.Stop();
         _logger.LogInformation("Retrieved blog post {0} in {1}ms", id, stopwatch.ElapsedMilliseconds);
 
+        if (post.PuzzleSolutions is {} sln && puzzleId is int pzd && pzd < sln?.Count())
+        {
+            return post with { PuzzleSolutions = [sln.ToList()[pzd]] };
+        }
         return post;
     }
 
