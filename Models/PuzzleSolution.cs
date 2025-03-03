@@ -8,4 +8,3 @@ public class PuzzleSolution
     public required string Actual { get; init; }
 }
 
-

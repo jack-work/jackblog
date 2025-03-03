@@ -1,0 +1,222 @@
+[
+    {
+        "Description": "Base case",
+        "Input": [],
+        "Expected": 0
+    },
+    {
+        "Description": "!Single element",
+        "Input": [
+            5
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Small array",
+        "Input": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Medium array with zeros",
+        "Input": [
+            0,
+            10,
+            0,
+            20,
+            0
+        ],
+        "Expected": 10
+    },
+    {
+        "Description": "Array with maximum allowed value",
+        "Input": [
+            100000,
+            50000,
+            25000
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Array with all zeros",
+        "Input": [
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Array with repeated values",
+        "Input": [
+            42,
+            42,
+            42,
+            42
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Large array",
+        "Input": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Maximum length array sample",
+        "Input": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Array with ascending values",
+        "Input": [
+            1,
+            10,
+            100,
+            1000,
+            10000
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Array with descending values",
+        "Input": [
+            10000,
+            1000,
+            100,
+            10,
+            1
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Random small array",
+        "Input": [
+            17,
+            3,
+            92,
+            41,
+            8
+        ],
+        "Expected": 0
+    },
+    {
+        "Description": "Random medium array",
+        "Input": [
+            73,
+            29,
+            5,
+            61,
+            84,
+            12,
+            37,
+            46
+        ],
+        "Expected": 54
+    },
+    {
+        "Description": "Random array with negative values",
+        "Input": [
+            25,
+            -10,
+            42,
+            -15,
+            30
+        ],
+        "Expected": 62
+    },
+    {
+        "Description": "Random large array",
+        "Input": [
+            624,
+            891,
+            237,
+            145,
+            502,
+            763,
+            319,
+            478,
+            951,
+            84
+        ],
+        "Expected": 60
+    },
+    {
+        "Description": "Random sparse array",
+        "Input": [
+            0,
+            0,
+            8742,
+            0,
+            0,
+            1359,
+            0,
+            0,
+            4281,
+            0
+        ],
+        "Expected": 15945
+    },
+    {
+        "Description": "Random mixed values",
+        "Input": [
+            12345,
+            67,
+            890,
+            12,
+            3456,
+            78,
+            901,
+            23
+        ],
+        "Expected": 6778
+    }
+]

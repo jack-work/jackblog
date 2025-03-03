@@ -7,17 +7,17 @@ namespace JackBlog.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly BlogService _blogService;
+    private readonly PuzzleAggregator _puzzleAggregator;
 
-    public HomeController(ILogger<HomeController> logger, BlogService blogService)
+    public HomeController(ILogger<HomeController> logger, PuzzleAggregator puzzleAggregator)
     {
         _logger = logger;
-        _blogService = blogService;
+        _puzzleAggregator = puzzleAggregator;
     }
 
     public IActionResult Index()
     {
-        var posts = _blogService.GetAllPosts();
+        var posts = _puzzleAggregator.GetAllPosts();
         return View(posts);
     }
 
@@ -31,13 +31,18 @@ public class HomeController : Controller
             ViewBag.PuzzleId = puzzleId;
         }
         
-        var post = _blogService.GetPostById(id, puzzleIndex);
+        var post = _puzzleAggregator.GetPostById(id, puzzleIndex);
         if (post == null)
         {
             return NotFound();
         }
         
         return View(post);
+    }
+
+    public IActionResult JsonResults(string id)
+    {
+        return Content(_puzzleAggregator.GetPuzzleResults(id), "text/plain");
     }
 
     public IActionResult Privacy()

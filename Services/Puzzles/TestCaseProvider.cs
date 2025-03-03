@@ -4,31 +4,27 @@ using System.Diagnostics;
 
 namespace JackBlog.Services;
 
-public class TestCaseProvider<TTestCase, TInput, TResult> : ITestCaseProvider<TTestCase, TInput, TResult>
-    where TTestCase : ITestCase<TInput, TResult>
+public class TestCaseProvider : ITestCaseProvider
 {
-    private readonly string _testName;
     private readonly JsonSerializerOptions _options = new() {
       PropertyNameCaseInsensitive = true
     };
-    private readonly ILogger<TestCaseProvider<TTestCase, TInput, TResult>> _logger;
+    private readonly ILogger<TestCaseProvider> _logger;
 
-    public TestCaseProvider(string testName, ILogger<TestCaseProvider<TTestCase, TInput, TResult>> logger)
+    public TestCaseProvider(ILogger<TestCaseProvider> logger)
     {
-        _testName = testName;
         _logger = logger;
-        _logger.LogInformation("TestCaseProvider initialized for test name: {TestName}", testName);
     }
 
-    public IEnumerable<TTestCase> GetTestCases()
+    public IEnumerable<TTestCase> GetTestCases<TTestCase, TInput, TResult>(string testName) where TTestCase : ITestCase<TInput, TResult>
     {
-        _logger.LogInformation("Loading test cases for {TestName}", _testName);
+        _logger.LogInformation("Loading test cases for {TestName}", testName);
         var stopwatch = Stopwatch.StartNew();
 
         string testCaseFilePath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory,
-            "testCases",
-            $"{_testName}.json"
+            "TestCases",
+            $"{testName}.json"
         );
 
         _logger.LogDebug("Test case file path: {FilePath}", testCaseFilePath);
@@ -63,3 +59,4 @@ public class TestCaseProvider<TTestCase, TInput, TResult> : ITestCaseProvider<TT
         }
     }
 }
+

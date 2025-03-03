@@ -1,6 +1,6 @@
 using JackBlog.Models;
 using JackBlog.Services;
-using Moq;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 
@@ -21,30 +21,30 @@ builder.Logging.AddOpenTelemetry(options =>
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft", LogLevel.Debug);
 builder.Logging.AddFilter("System", LogLevel.Warning);
-builder.Logging.AddFilter("JackBlog", LogLevel.Debug);
+builder.Logging.AddFilter("JackBlog", LogLevel.Warning);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<JackBlog.Models.BlogService>();
-builder.Services.AddSingleton<ILogger<CodePuzzleService>>(new ConsoleLogger<CodePuzzleService>());
+
+// Register options patterns
+builder.Services.Configure<PuzzleSettings>(
+    builder.Configuration.GetSection(PuzzleSettings.SectionName));
+builder.Services.Configure<SiteSettings>(
+    builder.Configuration.GetSection(SiteSettings.SectionName));
+    
+builder.Services.AddSingleton<JackBlog.Models.PuzzleAggregator>(services => {
+    var puzzleServices = services.GetServices<ICodePuzzleService>();
+    var logger = services.GetRequiredService<ILogger<PuzzleAggregator>>();
+    return new PuzzleAggregator(puzzleServices, logger);
+});
 builder.Services
-  .AddSingleton<ILogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>>(
-      new ConsoleLogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>());
-builder.Services.AddSingleton<ILogger<CodePuzzleService>>(new ConsoleLogger<CodePuzzleService>());
-builder.Services.AddSingleton<ILogger<BlogService>>(new ConsoleLogger<BlogService>());
-builder.Services.AddKeyedSingleton<
-    ITestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>
->(
-    "SordidArrays",
-    (serviceProvider, key) =>
-        new TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>(
-            key?.ToString()!,
-            serviceProvider.GetRequiredService<
-                ILogger<TestCaseProvider<SordidArraysTestCase, SordidArraysInput, double>>
-            >()
-        )
-);
-builder.Services.AddSingleton<CodePuzzleService>();
+  .AddSingleton<ILogger<TestCaseProvider>>(
+      new ConsoleLogger<TestCaseProvider>());
+builder.Services.AddSingleton<ILogger<PuzzleAggregator>>(new ConsoleLogger<PuzzleAggregator>());
+builder.Services.AddSingleton<ITestCaseProvider, TestCaseProvider>();
+
+builder.Services.AddCodePuzzleSolver<SordidArraysSolver, SordidArraysTestCase, SordidArraysInput, double>("SordidArrays");
+builder.Services.AddCodePuzzleSolver<TrappingRainWaterSolver, TestCase<int[], int>, int[], int>("TrappingRainWater");
 
 var app = builder.Build();
 
@@ -63,6 +63,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Configures the default routing pattern for the application:
+// - Maps URLs to controller actions based on the pattern {controller}/{action}/{id?}
+// - Default controller is "Home" if not specified in URL
+// - Default action is "Index" if not specified in URL
+// - Optional "id" parameter that can be passed to the action method
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
@@ -84,3 +89,23 @@ class ConsoleLogger<T> : ILogger<T>
         Console.WriteLine(state);
     }
 }
+
+static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddCodePuzzleSolver<TSolver, TTestCase, TInput, TResult>(this IServiceCollection services, string puzzleName) 
+        where TSolver : class, ICodePuzzleSolver<TTestCase, TInput, TResult>
+        where TTestCase : ITestCase<TInput, TResult>
+        => services
+        .AddSingleton<ILogger<TSolver>>(new ConsoleLogger<TSolver>())
+        .AddSingleton<ICodePuzzleSolver<TTestCase, TInput, TResult>, TSolver>()
+        .AddSingleton<ILogger<CodePuzzleService<TTestCase, TInput, TResult>>>(
+            new ConsoleLogger<CodePuzzleService<TTestCase, TInput, TResult>>())
+        .AddSingleton<ICodePuzzleService>(collection => {
+            var solver = collection.GetRequiredService<ICodePuzzleSolver<TTestCase, TInput, TResult>>();
+            var resolver = collection.GetRequiredService<ITestCaseProvider>();
+            var logger = collection.GetRequiredService<ILogger<CodePuzzleService<TTestCase, TInput, TResult>>>();
+            var puzzleSettings = collection.GetRequiredService<IOptions<PuzzleSettings>>();
+            return new CodePuzzleService<TTestCase, TInput, TResult>(puzzleName, solver, resolver, logger, puzzleSettings);
+        });
+}
+
