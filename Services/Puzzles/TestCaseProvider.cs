@@ -33,7 +33,7 @@ public class TestCaseProvider : ITestCaseProvider
         if (!File.Exists(testCaseFilePath))
         {
             _logger.LogError("Test case file not found: {FilePath}", testCaseFilePath);
-            throw new FileNotFoundException($"Test case file not found: {testCaseFilePath}");
+            return Enumerable.Empty<TTestCase>();
         }
 
         string json = File.ReadAllText(testCaseFilePath);

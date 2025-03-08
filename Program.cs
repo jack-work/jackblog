@@ -48,10 +48,7 @@ builder.Services
 builder.Services.AddSingleton<ILogger<PuzzleAggregator>>(new ConsoleLogger<PuzzleAggregator>());
 builder.Services.AddSingleton<ITestCaseProvider, TestCaseProvider>();
 
-builder.Services.AddCodePuzzleSolver<SordidArraysSolver, SordidArraysTestCase, SordidArraysInput, double>("SordidArrays");
-builder.Services.AddCodePuzzleSolver<TrappingRainWaterSolver, TestCase<int[], int>, int[], int>("TrappingRainWater");
-builder.Services.AddCodePuzzleSolver<VassalCensusSolver, TestCase<VassalCensusInput, int>, VassalCensusInput, int>("VassalCensus");
-builder.Services.AddCodePuzzleSolver<KokoNannerSolver, TestCase<KokoNannerInput, int>, KokoNannerInput, int>("KokoNanner");
+AddPuzzles(builder);
 
 var app = builder.Build();
 
@@ -86,6 +83,15 @@ app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static void AddPuzzles(WebApplicationBuilder builder)
+{
+    builder.Services.AddCodePuzzleSolver<InOrderSolver, TestCase<TreeNode, IList<int>>, TreeNode, IList<int>>("InOrderTraversal");
+    builder.Services.AddCodePuzzleSolver<SordidArraysSolver, SordidArraysTestCase, SordidArraysInput, double>("SordidArrays");
+    builder.Services.AddCodePuzzleSolver<TrappingRainWaterSolver, TestCase<int[], int>, int[], int>("TrappingRainWater");
+    builder.Services.AddCodePuzzleSolver<VassalCensusSolver, TestCase<VassalCensusInput, int>, VassalCensusInput, int>("VassalCensus");
+    builder.Services.AddCodePuzzleSolver<KokoNannerSolver, TestCase<KokoNannerInput, int>, KokoNannerInput, int>("KokoNanner");
+}
 
 class ConsoleLogger<T> : ILogger<T>
 {
