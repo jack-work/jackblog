@@ -3,13 +3,13 @@ using System.Diagnostics;
 
 namespace JackBlog.Services;
 
-public class SordidArraysSolver(ILogger<SordidArraysSolver> _logger) : ICodePuzzleSolver<SordidArraysTestCase, SordidArraysInput, double>
+public class SordidArraysSolver(ILogger<SordidArraysSolver> _logger) : ICodePuzzleSolver<SordidArraysInput, double>
 {
-    private double SolveTestCase(SordidArraysTestCase test)
+    public double Solve(SordidArraysInput test)
     {
-        _logger.LogDebug("Solving test case {test}", test.Description);
+        _logger.LogDebug("Solving SordidArrays");
         var sw = Stopwatch.StartNew();
-        var result = Solve(test.Input.Left.ToArray(), test.Input.Right.ToArray());
+        var result = Solve(test.Left.ToArray(), test.Right.ToArray());
         sw.Stop();
 
         _logger.LogDebug("Solved test case in {ElapsedMs}ms", sw.ElapsedMilliseconds);
@@ -62,11 +62,5 @@ public class SordidArraysSolver(ILogger<SordidArraysSolver> _logger) : ICodePuzz
         index < 0 ? Int32.MinValue :
         index >= arr.Length ? Int32.MaxValue :
         arr[index];
-
-    public double Solve(SordidArraysTestCase testCase)
-    {
-        return SolveTestCase(testCase);
-    }
 }
-
 

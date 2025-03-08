@@ -1,0 +1,17 @@
+[
+    {
+        "Description": "Base case",
+        "Input": {
+            "DuchyCount": 6,
+            "FealtyRecord": [[0,1],[0,2],[1,2],[3,4]]
+        },
+        "Expected": 3
+    },
+    {
+        "Description": "Routine case",
+        "Input": {
+            "DuchyCount": 6,
+            "FealtyRecord": [[0,1],[0,2],[1,2],[3,4],[3,5]]        },
+        "Expected": 2
+    }
+]

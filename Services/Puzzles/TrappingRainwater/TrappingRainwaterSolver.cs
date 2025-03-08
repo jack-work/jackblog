@@ -1,13 +1,7 @@
-using JackBlog.Models;
 namespace JackBlog.Services;
-public class TrappingRainWaterSolver : ICodePuzzleSolver<TestCase<int[], int>, int[], int>
+public class TrappingRainWaterSolver : ICodePuzzleSolver<int[], int>
 {
-    public int Solve(TestCase<int[], int> testCase)
-    {
-        return Trap(testCase.Input);
-    }
-
-    public int Trap(int[] height) {
+    public int Solve(int[] height) {
         if (height.Length <= 1) return 0;
         var st = new Stack<Rec>();
         var tallestThusFar = height.First();

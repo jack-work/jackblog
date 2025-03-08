@@ -1,0 +1,75 @@
+[
+  {
+    "description": "Minimum example",
+    "input": {
+      "NumHours": 1,
+      "Piles": [1]
+    },
+    "expected": 1
+  },
+  {
+    "description": "Basic example from LeetCode",
+    "input": {
+      "NumHours": 8,
+      "Piles": [3, 6, 7, 11]
+    },
+    "expected": 4
+  },
+  {
+    "description": "Exact hours match",
+    "input": {
+      "NumHours": 5,
+      "Piles": [30, 11, 23, 4, 20]
+    },
+    "expected": 30
+  },
+  {
+    "description": "Single large pile",
+    "input": {
+      "NumHours": 8,
+      "Piles": [312884470]
+    },
+    "expected": 39110559
+  },
+  {
+    "description": "Hours equal to number of piles",
+    "input": {
+      "NumHours": 4,
+      "Piles": [3, 6, 7, 11]
+    },
+    "expected": 11
+  },
+  {
+    "description": "More hours than needed",
+    "input": {
+      "NumHours": 10,
+      "Piles": [3, 6, 7, 11]
+    },
+    "expected": 3
+  },
+  {
+    "description": "Large number of piles",
+    "input": {
+      "NumHours": 6,
+      "Piles": [1, 2, 3, 4, 5, 6]
+    },
+    "expected": 6
+  },
+  {
+    "description": "All piles the same size",
+    "input": {
+      "NumHours": 4,
+      "Piles": [10, 10, 10, 10]
+    },
+    "expected": 10
+  },
+  {
+    "description": "Very large pile near integer limit",
+    "input": {
+      "NumHours": 100,
+      "Piles": [2147483647, 1000000000, 500000000, 250000000, 125000000, 62500000, 31250000, 15625000, 7812500, 3906250, 1953125, 976562, 488281, 244140, 122070]
+    },
+    "expected": 45691142
+  }
+]
+

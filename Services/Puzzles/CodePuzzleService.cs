@@ -8,14 +8,14 @@ namespace JackBlog.Services;
 public class CodePuzzleService<TTestCase, TInput, TResult> : ICodePuzzleService where TTestCase : ITestCase<TInput, TResult>
 {
     private readonly ITestCaseProvider _testCaseProvider;
-    private readonly ICodePuzzleSolver<TTestCase, TInput, TResult> _solver;
+    private readonly ICodePuzzleSolver<TInput, TResult> _solver;
     private readonly ILogger<CodePuzzleService<TTestCase, TInput, TResult>> _logger;
     private readonly JsonSerializerOptions _options = new JsonSerializerOptions { WriteIndented = true };
     private readonly PuzzleSettings _puzzleSettings;
 
     public CodePuzzleService(
         string puzzleName,
-        ICodePuzzleSolver<TTestCase, TInput, TResult> solver,
+        ICodePuzzleSolver<TInput, TResult> solver,
         ITestCaseProvider testCaseProvider,
         ILogger<CodePuzzleService<TTestCase, TInput, TResult>> logger,
         IOptions<PuzzleSettings> puzzleSettings)
@@ -72,7 +72,7 @@ public class CodePuzzleService<TTestCase, TInput, TResult> : ICodePuzzleService 
                     Input = testCase.Input,
                     Description = testCase.Description,
                     Expected = testCase.Expected,
-                    Actual = _solver.Solve(testCase),
+                    Actual = _solver.Solve(testCase.Input),
                 }
             };
         }
@@ -87,7 +87,7 @@ public class CodePuzzleService<TTestCase, TInput, TResult> : ICodePuzzleService 
                     Input = test.Input,
                     Description = test.Description,
                     Expected = test.Expected,
-                    Actual = _solver.Solve(test),
+                    Actual = _solver.Solve(test.Input),
                 })
                 .ToList();
         }

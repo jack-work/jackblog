@@ -22,7 +22,7 @@ builder.Logging.AddOpenTelemetry(options =>
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft", LogLevel.Debug);
 builder.Logging.AddFilter("System", LogLevel.Warning);
-builder.Logging.AddFilter("JackBlog", LogLevel.Warning);
+builder.Logging.AddFilter("JackBlog", LogLevel.Debug);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -32,11 +32,12 @@ builder.Services.Configure<PuzzleSettings>(
     builder.Configuration.GetSection(PuzzleSettings.SectionName));
 builder.Services.Configure<SiteSettings>(
     builder.Configuration.GetSection(SiteSettings.SectionName));
-    
+
 // Register markdown service
 builder.Services.AddSingleton<MarkdownService>();
-    
-builder.Services.AddSingleton<JackBlog.Models.PuzzleAggregator>(services => {
+
+builder.Services.AddSingleton<JackBlog.Models.PuzzleAggregator>(services =>
+{
     var puzzleServices = services.GetServices<ICodePuzzleService>();
     var logger = services.GetRequiredService<ILogger<PuzzleAggregator>>();
     return new PuzzleAggregator(puzzleServices, logger);
@@ -49,6 +50,8 @@ builder.Services.AddSingleton<ITestCaseProvider, TestCaseProvider>();
 
 builder.Services.AddCodePuzzleSolver<SordidArraysSolver, SordidArraysTestCase, SordidArraysInput, double>("SordidArrays");
 builder.Services.AddCodePuzzleSolver<TrappingRainWaterSolver, TestCase<int[], int>, int[], int>("TrappingRainWater");
+builder.Services.AddCodePuzzleSolver<VassalCensusSolver, TestCase<VassalCensusInput, int>, VassalCensusInput, int>("VassalCensus");
+builder.Services.AddCodePuzzleSolver<KokoNannerSolver, TestCase<KokoNannerInput, int>, KokoNannerInput, int>("KokoNanner");
 
 var app = builder.Build();
 
@@ -104,16 +107,17 @@ class ConsoleLogger<T> : ILogger<T>
 
 static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddCodePuzzleSolver<TSolver, TTestCase, TInput, TResult>(this IServiceCollection services, string puzzleName) 
-        where TSolver : class, ICodePuzzleSolver<TTestCase, TInput, TResult>
+    public static IServiceCollection AddCodePuzzleSolver<TSolver, TTestCase, TInput, TResult>(this IServiceCollection services, string puzzleName)
+        where TSolver : class, ICodePuzzleSolver<TInput, TResult>
         where TTestCase : ITestCase<TInput, TResult>
         => services
         .AddSingleton<ILogger<TSolver>>(new ConsoleLogger<TSolver>())
-        .AddSingleton<ICodePuzzleSolver<TTestCase, TInput, TResult>, TSolver>()
+        .AddSingleton<ICodePuzzleSolver<TInput, TResult>, TSolver>()
         .AddSingleton<ILogger<CodePuzzleService<TTestCase, TInput, TResult>>>(
             new ConsoleLogger<CodePuzzleService<TTestCase, TInput, TResult>>())
-        .AddSingleton<ICodePuzzleService>(collection => {
-            var solver = collection.GetRequiredService<ICodePuzzleSolver<TTestCase, TInput, TResult>>();
+        .AddSingleton<ICodePuzzleService>(collection =>
+        {
+            var solver = collection.GetRequiredService<ICodePuzzleSolver<TInput, TResult>>();
             var resolver = collection.GetRequiredService<ITestCaseProvider>();
             var logger = collection.GetRequiredService<ILogger<CodePuzzleService<TTestCase, TInput, TResult>>>();
             var puzzleSettings = collection.GetRequiredService<IOptions<PuzzleSettings>>();
